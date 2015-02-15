@@ -1,3 +1,6 @@
+#ifndef PLAYERSTATE_HPP
+#define PLAYERSTATE_HPP
+
 enum playerState {
     MOVE_R,
     MOVE_L,
@@ -6,3 +9,5 @@ enum playerState {
 
     qttPlayerState
 };
+
+#endif

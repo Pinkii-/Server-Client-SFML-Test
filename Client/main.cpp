@@ -9,10 +9,11 @@
 #include "../Utility/Actions.hpp"
 #include "InputManager.hpp"
 
+sf::TcpSocket conector;
 sf::UdpSocket socket;
 sf::IpAddress ip = "127.0.0.1";
 unsigned short serverPort = 54000;
-unsigned short clientPort = 54001;
+unsigned short clientPort;
 
 void sendActions() {
     sf::Packet penis;
@@ -41,22 +42,35 @@ int main() {
     player.setPosition(400,300);
     player.setFillColor(sf::Color::Blue);
 
+    conector.setBlocking(false);
+    conector.connect(ip,serverPort);
+    clientPort = conector.getLocalPort();
+
+    char data[1] = {0};
+    conector.send(data, 1);
+
     socket.setBlocking(false);
     socket.bind(clientPort);
 
-    InputManager::bind(playerState::MOVE_L,sf::Keyboard::Key::A);
-    InputManager::bind(playerState::MOVE_R,sf::Keyboard::Key::D);
-    InputManager::bind(playerState::MOVE_UP,sf::Keyboard::Key::W);
-    InputManager::bind(playerState::MOVE_DOWN,sf::Keyboard::Key::S);
+    InputManager::bind(playerState::MOVE_L,     sf::Keyboard::Key::A);
+    InputManager::bind(playerState::MOVE_R,     sf::Keyboard::Key::D);
+    InputManager::bind(playerState::MOVE_UP,    sf::Keyboard::Key::W);
+    InputManager::bind(playerState::MOVE_DOWN,  sf::Keyboard::Key::S);
 
-
+    int n = 0;
 
     while (window.isOpen()) {
+        if (n % 1000000 == 0) {
+            n = 0;
+
         sf::Event event;
         while (window.pollEvent(event)) {
             switch (event.type) {
             case sf::Event::Closed:
                 window.close();
+                break;
+            case sf::Event::KeyPressed:
+                if (event.key.code == sf::Keyboard::Key::Escape) window.close();
                 break;
             default:
                 break;
@@ -66,9 +80,10 @@ int main() {
 
         sendActions();
 
-        float *penis;
+        float penis[2];
         penis[0] = player.getPosition().x;
         penis[1] = player.getPosition().y;
+
         recive(penis);
 
         update(penis,player);
@@ -78,6 +93,8 @@ int main() {
         window.clear();
         window.draw(player);
         window.display();
+        }
+        ++n;
     }
 
 	return 0;
