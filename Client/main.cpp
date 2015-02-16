@@ -11,8 +11,8 @@
 
 sf::TcpSocket conector;
 sf::UdpSocket socket;
-sf::IpAddress ip = "127.0.0.1";
-unsigned short serverPort = 54000;
+sf::IpAddress ip = "147.83.175.33";
+unsigned short serverPort = 50000;
 unsigned short clientPort;
 
 void sendActions() {

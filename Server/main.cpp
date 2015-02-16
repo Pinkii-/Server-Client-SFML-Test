@@ -11,8 +11,8 @@ const int FRAMES = 30;
 
 sf::TcpListener listener;
 sf::UdpSocket socket;
-sf::IpAddress ip = "127.0.0.1";
-unsigned short serverPort = 54000;
+//sf::IpAddress ip = "127.0.0.1";
+unsigned short serverPort = 50000;
 int id = 0;
 
 void checkNewConnections(std::vector<Player> &players, sf::TcpListener &listener) {
@@ -58,6 +58,7 @@ void update(float deltaTime, std::vector<Player> &players){
     for (Player& player : players) {
         std::vector<playerState> pState = *player.getStates();
         sf::Vector2f pos = player.getPos();
+        std::cout << "player number " << player.getId() << std::endl;
         for (unsigned int i = 0; i < playerState::qttPlayerState; ++i) {
             if (pState[i]) {
                 switch (i) {
